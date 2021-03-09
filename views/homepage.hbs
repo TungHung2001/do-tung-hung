@@ -1,0 +1,68 @@
+  
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    h1{
+        color: #7c795d; 
+        font-family: 'Trocchi', serif; 
+        font-size: 45px; font-weight: normal;
+        line-height: 48px; margin: 0;
+    }
+#toy {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#toy td, #toy th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#toy tr:nth-child(even){background-color: #f2f2f2;}
+
+#toy tr:hover {background-color: #ddd;}
+
+#toy th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: blue;
+  color: white;
+}
+</style>
+<body>
+    <h1>Toy Store</h1>
+    
+    <form action="/search" method="post">
+        Search <input type="text" name="txtSearch">
+        <input type="submit" value="Search">
+    </form>
+     <a href="/new">New Product</a>
+    <table id="toy">
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Color</th>
+            <th>Delete</th>
+        </tr>
+        {{#each model}}
+        <tr>
+            <td>{{productName}}</td>
+            <td>{{price}}</td>
+            <td>{{color}}</td>
+            <td>{{Delete}}</td>
+            <td><a href="/delete?pid={{_id}}">{{_id}}</a></td>
+        </tr>
+        
+        {{/each}}
+        
+    </table>
+</body>
+</html>
