@@ -29,22 +29,31 @@ app.get('/new',(req,res)=>{
     res.render('newtoy')
 })
 app.post('/insert',async (req,res)=>{
-    let client= await MongoClient.connect(url);
-    let dbo = client.db("MyDatabase");
+    let error= "";
+   
     let nameInput = req.body.productName;
     let priceInput = req.body.price;
     let colorInput = req.body.color;
     let newProduct = {productName : nameInput, price:priceInput, color:colorInput};
+    if (priceInput<500){
+        error +="error";
+    }
+    if (error){
+        res.render('newtoy',{error:error});
+    } else {
+    let client= await MongoClient.connect(url);
+    let dbo = client.db("MyDatabase");
     await dbo.collection("products").insertOne(newProduct);
-   
     let results = await dbo.collection("products").find({}).toArray();
     res.render('homepage',{model:results})
+    }
 })
 
 app.post('/search',async (req,res)=>{
-    let searchText = req.body.txtSearch;
+    
     let client= await MongoClient.connect(url);
     let dbo = client.db("MyDatabase");
+    let searchText = req.body.txtSearch;
     let results = await dbo.collection("products").
         find({productName: new RegExp(searchText,'i')}).toArray();
         
@@ -52,12 +61,11 @@ app.post('/search',async (req,res)=>{
 })
 
 app.get('/delete',async (req,res)=>{
-    let id = req.query.pid;
-    var ObjectID = require('mongodb').ObjectID;
-    let condition = {"_id":ObjectID(id)};    
-
     let client= await MongoClient.connect(url);
     let dbo = client.db("MyDatabase");
+    let id = req.query.pid;
+    var ObjectID = require('mongodb').ObjectID;
+    let condition = {"_id":ObjectID(id)};  
     
     await dbo.collection("products").deleteOne(condition);
     res.redirect('/');
